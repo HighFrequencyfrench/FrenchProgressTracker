@@ -1,0 +1,162 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #1a1a1a;
+    margin-bottom: 24px;
+    font-size: 24px;
+}
+
+.progress-container {
+    margin-bottom: 24px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    width: 0%;
+    height: 100%;
+    background-color: #03015b;
+    transition: width 0.3s ease;
+}
+
+#progress-text {
+    text-align: center;
+    margin-top: 12px;
+    color: #666;
+}
+
+.share-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #03015b;
+    color: #ea3f3a;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    transition: background-color 0.2s;
+}
+
+.share-button:hover {
+    background-color: #020144;
+}
+
+.episode {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: all 0.2s;
+    background-color: white;
+    overflow: hidden;
+}
+
+.episode-content {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    gap: 12px;
+}
+
+.episode-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background-color: #f8f8f8;
+}
+
+.complete-button {
+    padding: 8px 16px;
+    background-color: #03015b;
+    color: #ea3f3a;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    flex: 1;
+}
+
+.listen-button {
+    padding: 8px 16px;
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 500;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.listen-button:hover {
+    background-color: #1ed760;
+}
+
+.episode.completed {
+    border-color: #03015b;
+}
+
+.episode.completed .episode-content {
+    background-color: #03015b;
+    color: white;
+}
+
+.episode-number {
+    font-weight: bold;
+    min-width: 80px;
+}
+
+.episode-title {
+    flex-grow: 1;
+}
+
+.episode-level {
+    color: #666;
+}
+
+.episode.completed .episode-level {
+    color: #ffffff;
+}
+
+.spotify-icon {
+    width: 16px;
+    height: 16px;
+}
