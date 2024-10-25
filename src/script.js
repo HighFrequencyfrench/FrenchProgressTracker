@@ -67,7 +67,9 @@ const episodes = [
     }
 ];
 
-const completedEpisodes = new Set();
+// Load completed episodes from localStorage
+let completedEpisodes = new Set(JSON.parse(localStorage.getItem('completedEpisodes')) || []);
+
 const progressFill = document.getElementById('progress-fill');
 const progressText = document.getElementById('progress-text');
 const episodesList = document.getElementById('episodes-list');
@@ -77,6 +79,11 @@ const shareButton = document.getElementById('share-btn');
 episodes.forEach(episode => {
     const episodeElement = document.createElement('div');
     episodeElement.className = 'episode';
+    // Add completed class if episode was previously completed
+    if (completedEpisodes.has(episode.id)) {
+        episodeElement.classList.add('completed');
+    }
+    
     episodeElement.innerHTML = `
         <div class="episode-content">
             <span class="episode-number">S02-EP${String(episode.id).padStart(2, '0')}</span>
@@ -84,7 +91,9 @@ episodes.forEach(episode => {
             <span class="episode-level">${episode.level}</span>
         </div>
         <div class="episode-actions">
-            <button class="complete-button">Mark as Complete</button>
+            <button class="complete-button">
+                ${completedEpisodes.has(episode.id) ? 'Mark as Incomplete' : 'Mark as Complete'}
+            </button>
             <a href="${episode.url}" target="_blank" class="listen-button">
                 <svg width="16" height="16"><use xlink:href="#spotify-icon"/></svg>
                 Listen on Spotify
@@ -102,13 +111,18 @@ episodes.forEach(episode => {
 });
 
 function toggleEpisode(id, element) {
+    const button = element.querySelector('.complete-button');
     if (completedEpisodes.has(id)) {
         completedEpisodes.delete(id);
         element.classList.remove('completed');
+        button.textContent = 'Mark as Complete';
     } else {
         completedEpisodes.add(id);
         element.classList.add('completed');
+        button.textContent = 'Mark as Incomplete';
     }
+    // Save to localStorage after each change
+    localStorage.setItem('completedEpisodes', JSON.stringify([...completedEpisodes]));
     updateProgress();
 }
 
@@ -122,15 +136,31 @@ shareButton.addEventListener('click', shareProgress);
 
 function shareProgress() {
     const progress = (completedEpisodes.size / episodes.length) * 100;
+    const shareUrl = window.location.href;
     const text = `I've completed ${completedEpisodes.size} episodes (${progress.toFixed(1)}%) of French From the Start Season 2! Join me in learning French through stories!`;
     
+    // Create sharing options for different platforms
+    const shareLinks = {
+        twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(text)}`,
+        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`
+    };
+
+    // Try native sharing first
     if (navigator.share) {
         navigator.share({
             title: 'My French Learning Progress',
             text: text,
-            url: window.location.href
-        }).catch(console.error);
+            url: shareUrl
+        }).catch(() => {
+            // If native sharing fails, open a new window with Twitter share
+            window.open(shareLinks.twitter, '_blank');
+        });
     } else {
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        // If native sharing is not available, open Twitter share
+        window.open(shareLinks.twitter, '_blank');
     }
 }
+
+// Initialize progress on page load
+updateProgress();
